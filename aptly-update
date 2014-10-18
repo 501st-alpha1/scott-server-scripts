@@ -1,12 +1,13 @@
 #!/bin/bash
 
+timestamp=`date "+%Y%m%d%H%M"`
 aptly publish drop jessie
 
-aptly snapshot drop jessie-final-20141017
+aptly snapshot drop jessie-final-$timestamp
 
-aptly snapshot drop jessie-main-7.6
-aptly snapshot drop jessie-updates-20141017
-aptly snapshot drop jessie-security-20141017
+aptly snapshot drop jessie-main-$timestamp
+aptly snapshot drop jessie-updates-$timestamp
+aptly snapshot drop jessie-security-$timestamp
 
 aptly mirror drop jessie-main
 aptly mirror drop jessie-updates
@@ -22,10 +23,10 @@ aptly mirror update jessie-main
 aptly mirror update jessie-security
 aptly mirror update jessie-updates
   
-aptly snapshot create jessie-main-7.6 from mirror jessie-main
-aptly snapshot create jessie-updates-20141017 from mirror jessie-updates
-aptly snapshot create jessie-security-20141017 from mirror jessie-security
+aptly snapshot create jessie-main-$timestamp from mirror jessie-main
+aptly snapshot create jessie-updates-$timestamp from mirror jessie-updates
+aptly snapshot create jessie-security-$timestamp from mirror jessie-security
 
-aptly snapshot merge -latest jessie-final-20141017 jessie-main-7.6 jessie-updates-20141017 jessie-security-20141017
+aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp
 
-aptly publish -distibution=jessie jessie-final-20141017
+aptly publish -distibution=jessie jessie-final-$timestamp
