@@ -18,7 +18,7 @@
 validArgs=("packages")
 source loadconf "$HOME/.scott-server-scripts" "aptly-update" validArgs[@]
 
-if [ "$1" == "create" ]
+if [ "$1" == "edit" ]
 then
   $filter="'Priority (required) | Priority (important) | Priority (standard)"
   for $package in $packages
@@ -27,18 +27,29 @@ then
   done
   $filter="$filter'"
 
-  aptly mirror drop jessie-main
-  aptly mirror drop jessie-updates
-  aptly mirror drop jessie-security
-  aptly mirror drop steam
+  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
 
-  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
+  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
 
-  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
+elif [ "$1" == "create" ]
+then
+  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard)' -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
 
-  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
+  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard)' -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+
+  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard)' -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
 
   aptly mirror create steam http://repo.steampowered.com/steam/ precise steam
+
+  aptly mirror update jessie-main
+  aptly mirror update jessie-security
+  aptly mirror update jessie-updates
+  aptly mirror update steam
+
+  aptly snapshot create jessie-main-temp from mirror jessie-main
+
+  aptly publish snapshot -distribution=jessie jessie-final-temp
 else
   timestamp=`date "+%Y%m%d%H%M"`
 
