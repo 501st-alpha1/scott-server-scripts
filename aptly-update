@@ -15,13 +15,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+validArgs=("packages")
+source loadconf "$HOME/.scott-server-scripts" "aptly-update" validArgs[@]
+
 if [ "$1" == "create" ]
 then
-  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
+  $filter="Priority (required) | Priority (important) | Priority (standard)"
+  for $package in $packages
+  do
+    $filter="$filter | $package"
+  done
 
-  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+  aptly mirror drop jessie-main
+  aptly mirror drop jessie-updates
+  aptly mirror drop jessie-security
+  aptly mirror drop steam
 
-  aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
+  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
+
+  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+
+  aptly mirror create -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
 
   aptly mirror create steam http://repo.steampowered.com/steam/ precise steam
 else
