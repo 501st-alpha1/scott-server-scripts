@@ -47,9 +47,9 @@ then
   aptly mirror update jessie-updates
   aptly mirror update steam
 
-  aptly snapshot create jessie-main-temp from mirror jessie-main
+  aptly snapshot create jessie-temp from mirror jessie-main
 
-  aptly publish snapshot -distribution=jessie jessie-final-temp
+  aptly publish snapshot -distribution=jessie jessie-temp
 else
   timestamp=`date "+%Y%m%d%H%M"`
 
