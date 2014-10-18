@@ -27,11 +27,11 @@ then
   done
   $filter="$filter'"
 
-  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
+  aptly mirror edit -filter="$filter" -filter-with-deps jessie-updates
 
-  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+  aptly mirror edit -filter="$filter" -filter-with-deps jessie-security
 
-  aptly mirror edit -architectures=amd64,i386 -filter="$filter" -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
+  aptly mirror edit -filter="$filter" -filter-with-deps jessie-main
 elif [ "$1" == "create" ]
 then
   aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard)' -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
