@@ -5,12 +5,14 @@ timestamp=`date "+%Y%m%d%H%M"`
 aptly mirror update jessie-main
 aptly mirror update jessie-security
 aptly mirror update jessie-updates
+aptly mirror update steam
   
 aptly snapshot create jessie-main-$timestamp from mirror jessie-main
 aptly snapshot create jessie-updates-$timestamp from mirror jessie-updates
 aptly snapshot create jessie-security-$timestamp from mirror jessie-security
+aptly snapshot create steam-$timestamp from mirror steam
 
-aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp
+aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp steam-$timestamp
 
 aptly publish switch jessie jessie-final-$timestamp
 
