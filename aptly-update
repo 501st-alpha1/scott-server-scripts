@@ -1,23 +1,6 @@
 #!/bin/bash
 
 timestamp=`date "+%Y%m%d%H%M"`
-aptly publish drop jessie
-
-aptly snapshot drop jessie-final-$timestamp
-
-aptly snapshot drop jessie-main-$timestamp
-aptly snapshot drop jessie-updates-$timestamp
-aptly snapshot drop jessie-security-$timestamp
-
-aptly mirror drop jessie-main
-aptly mirror drop jessie-updates
-aptly mirror drop jessie-security
-
-aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
-
-aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
-
-aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
 
 aptly mirror update jessie-main
 aptly mirror update jessie-security
@@ -29,4 +12,6 @@ aptly snapshot create jessie-security-$timestamp from mirror jessie-security
 
 aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp
 
-aptly publish -distibution=jessie jessie-final-$timestamp
+aptly publish switch jessie jessie-final-$timestamp
+
+aptly db cleanup
