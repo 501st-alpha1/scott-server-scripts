@@ -20,11 +20,12 @@ source loadconf "$HOME/.scott-server-scripts" "aptly-update" validArgs[@]
 
 if [ "$1" == "create" ]
 then
-  $filter="Priority (required) | Priority (important) | Priority (standard)"
+  $filter="'Priority (required) | Priority (important) | Priority (standard)"
   for $package in $packages
   do
     $filter="$filter | $package"
   done
+  $filter="$filter'"
 
   aptly mirror drop jessie-main
   aptly mirror drop jessie-updates
