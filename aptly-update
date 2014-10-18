@@ -1,0 +1,31 @@
+#!/bin/bash
+
+aptly publish drop jessie
+
+aptly snapshot drop jessie-final-20141017
+
+aptly snapshot drop jessie-main-7.6
+aptly snapshot drop jessie-updates-20141017
+aptly snapshot drop jessie-security-20141017
+
+aptly mirror drop jessie-main
+aptly mirror drop jessie-updates
+aptly mirror drop jessie-security
+
+aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-updates http://ftp.us.debian.org/debian/ jessie-updates main
+
+aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-security http://security.debian.org/ jessie/updates main
+
+aptly mirror create -architectures=amd64,i386 -filter='Priority (required) | Priority (important) | Priority (standard) | kde-base | emacs | iceweasel' -filter-with-deps jessie-main http://ftp.us.debian.org/debian/ jessie main
+
+aptly mirror update jessie-main
+aptly mirror update jessie-security
+aptly mirror update jessie-updates
+  
+aptly snapshot create jessie-main-7.6 from mirror jessie-main
+aptly snapshot create jessie-updates-20141017 from mirror jessie-updates
+aptly snapshot create jessie-security-20141017 from mirror jessie-security
+
+aptly snapshot merge -latest jessie-final-20141017 jessie-main-7.6 jessie-updates-20141017 jessie-security-20141017
+
+aptly publish -distibution=jessie jessie-final-20141017
