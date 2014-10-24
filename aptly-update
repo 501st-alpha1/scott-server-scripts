@@ -20,12 +20,12 @@ source loadconf "$HOME/.scott-server-scripts" "aptly-update" validArgs[@]
 
 if [ "$1" == "edit" ]
 then
-  filter="'Priority (required) | Priority (important) | Priority (standard)"
+  filter="Priority (required) | Priority (important) | Priority (standard)"
   for package in ${packages[@]}
   do
     filter="$filter | $package"
   done
-  filter="$filter'"
+  filter="$filter"
 
   aptly mirror edit -filter="$filter" jessie-updates
 
