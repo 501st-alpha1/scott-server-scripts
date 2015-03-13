@@ -42,10 +42,13 @@ then
 
   aptly mirror create steam http://repo.steampowered.com/steam/ precise steam
 
+  aptly mirror create spotify http://repository.spotify.com stable non-free
+
   aptly mirror update jessie-main
   aptly mirror update jessie-security
   aptly mirror update jessie-updates
   aptly mirror update steam
+  aptly mirror update spotify
 
   aptly snapshot create jessie-temp from mirror jessie-main
 
@@ -57,13 +60,15 @@ else
   aptly mirror update jessie-security
   aptly mirror update jessie-updates
   aptly mirror update steam
+  aptly mirror update spotify
   
   aptly snapshot create jessie-main-$timestamp from mirror jessie-main
   aptly snapshot create jessie-updates-$timestamp from mirror jessie-updates
   aptly snapshot create jessie-security-$timestamp from mirror jessie-security
   aptly snapshot create steam-$timestamp from mirror steam
+  aptly snapshot create spotify-$timestamp from mirror spotify
 
-  aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp steam-$timestamp
+  aptly snapshot merge -latest jessie-final-$timestamp jessie-main-$timestamp jessie-updates-$timestamp jessie-security-$timestamp steam-$timestamp spotify-$timestamp
 
   aptly publish switch jessie jessie-final-$timestamp
 
